@@ -1,2 +1,2948 @@
 # istemadegestiondecreditogp..com
-Sistema de Gestion de CREDITO
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Créditos - Global Pacific SAS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 1s ease;
+            position: relative;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            color: #b21f1f;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+            border: 1px solid #d0d0d0;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-header {
+            background: #1a2a6c;
+            color: white;
+            padding: 18px 25px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+        
+        .form-header i {
+            margin-right: 12px;
+            font-size: 1.8rem;
+        }
+        
+        .form-body {
+            padding: 25px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .section-title {
+            background: #e9ecef;
+            padding: 12px 18px;
+            border-left: 5px solid #b21f1f;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #1a2a6c;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 1.1rem;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            color: #b21f1f;
+            font-size: 1.3rem;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px 20px;
+        }
+        
+        .form-group {
+            flex: 1 0 300px;
+            padding: 0 10px;
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.05rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            box-shadow: 0 0 0 3px rgba(26, 42, 108, 0.1);
+            background: #fff;
+        }
+        
+        .documents-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .document-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .document-table th {
+            background: #1a2a6c;
+            color: white;
+            padding: 14px 18px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .document-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #eaeaea;
+            vertical-align: middle;
+        }
+        
+        .document-table tr:nth-child(even) {
+            background: #f1f3f5;
+        }
+        
+        .document-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        
+        .status-pending {
+            background: #ffe3e3;
+            color: #c92a2a;
+        }
+        
+        .status-complete {
+            background: #d3f9d8;
+            color: #2b8a3e;
+        }
+        
+        .status-review {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .btn-primary {
+            background: #1a2a6c;
+            color: white;
+            box-shadow: 0 4px 8px rgba(26, 42, 108, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background: #0d1a4a;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background: #495057;
+            color: white;
+            box-shadow: 0 4px 8px rgba(73, 80, 87, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: #343a40;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-success {
+            background: #2b8a3e;
+            color: white;
+            box-shadow: 0 4px 8px rgba(43, 138, 62, 0.2);
+        }
+        
+        .btn-success:hover {
+            background: #237532;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-danger {
+            background: #c92a2a;
+            color: white;
+            box-shadow: 0 4px 8px rgba(201, 42, 42, 0.2);
+        }
+        
+        .btn-danger:hover {
+            background: #a61e1e;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-warning {
+            background: #e67700;
+            color: white;
+            box-shadow: 0 4px 8px rgba(230, 119, 0, 0.2);
+        }
+        
+        .btn-warning:hover {
+            background: #d35400;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-info {
+            background: #0dcaf0;
+            color: white;
+            box-shadow: 0 4px 8px rgba(13, 202, 240, 0.2);
+        }
+        
+        .btn-info:hover {
+            background: #0aa2c0;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 35px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: white;
+            font-size: 0.95rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-top: 25px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        
+        .person-type {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .person-card {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .person-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .person-card.selected {
+            border-color: #1a2a6c;
+            background: #f0f7ff;
+        }
+        
+        .person-card h3 {
+            color: #1a2a6c;
+            margin-bottom: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .document-list {
+            padding-left: 25px;
+        }
+        
+        .document-list li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 30px;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+        
+        .document-list li:before {
+            content: "•";
+            color: #1a2a6c;
+            font-size: 1.8rem;
+            position: absolute;
+            left: 0;
+            top: -8px;
+        }
+        
+        @media (max-width: 768px) {
+            .person-type {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .form-header {
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #1a2a6c;
+            border-radius: 20px;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 18px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transform: translateX(200%);
+            transition: transform 0.4s ease;
+            max-width: 90%;
+            letter-spacing: 0.3px;
+            font-size: 1.05rem;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #2b8a3e;
+        }
+        
+        .notification.error {
+            background: #c92a2a;
+        }
+        
+        .notification.warning {
+            background: #e67700;
+        }
+        
+        .admin-panel {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            padding: 30px;
+            margin-top: 35px;
+            animation: fadeInUp 1s ease;
+            border: 1px solid #d0d0d0;
+        }
+        
+        .admin-header {
+            background: #1a2a6c;
+            color: white;
+            padding: 18px 28px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 10px 10px 0 0;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        
+        .admin-header h2 {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .admin-header h2 i {
+            margin-right: 12px;
+        }
+        
+        .admin-actions {
+            margin: 25px 0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .submissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        
+        .submissions-table th, .submissions-table td {
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .submissions-table th {
+            background: #1a2a6c;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .submissions-table tr:nth-child(even) {
+            background: #f1f3f5;
+        }
+        
+        .back-button {
+            background: #495057;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(73, 80, 87, 0.2);
+            letter-spacing: 0.3px;
+        }
+        
+        .back-button:hover {
+            background: #343a40;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .back-button i {
+            margin-right: 10px;
+        }
+        
+        .tab-container {
+            margin-top: 25px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 3px solid #1a2a6c;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 14px 25px;
+            cursor: pointer;
+            background: #e9ecef;
+            border-radius: 6px 6px 0 0;
+            margin-right: 8px;
+            min-width: 140px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #1a2a6c;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #eaeaea;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card h3 {
+            color: #1a2a6c;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 1.2rem;
+        }
+        
+        .stat-card .stat-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #b21f1f;
+            margin: 15px 0;
+        }
+        
+        .stat-card .stat-label {
+            color: #495057;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border: 1px solid #d0d0d0;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #495057;
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: #b21f1f;
+            transform: scale(1.1);
+        }
+        
+        .login-container {
+            max-width: 450px;
+            margin: 100px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+            text-align: center;
+            border: 1px solid #d0d0d0;
+        }
+        
+        .login-container h2 {
+            color: #1a2a6c;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        
+        .login-container input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 18px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 1.05rem;
+        }
+        
+        .login-container button {
+            width: 100%;
+            padding: 14px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(26, 42, 108, 0.2);
+        }
+        
+        .login-container button:hover {
+            background: #0d1a4a;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .credentials-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 25px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .credentials-form h3 {
+            color: #1a2a6c;
+            margin-bottom: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .download-all-btn {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .download-link {
+            color: #1a2a6c;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .download-link:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .link-form {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .link-form h3 {
+            color: #1a2a6c;
+            margin-bottom: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .generated-link {
+            background: #f1f3f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #d0d0d0;
+        }
+        
+        .generated-link a {
+            color: #1a2a6c;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            word-break: break-all;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        
+        .qr-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .link-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .client-list {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 25px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .client-list h3 {
+            color: #1a2a6c;
+            margin-bottom: 18px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .client-item {
+            padding: 14px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .client-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .client-item:last-child {
+            border-bottom: none;
+        }
+        
+        .client-info {
+            flex: 1;
+        }
+        
+        .client-info h4 {
+            color: #1a2a6c;
+            margin-bottom: 7px;
+            font-size: 1.1rem;
+        }
+        
+        .client-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .link-badge {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+        
+        .link-badge i {
+            color: #1a2a6c;
+        }
+        
+        .file-preview {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-complete-badge {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending-badge {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .view-btn {
+            background: #1a2a6c;
+            color: white;
+        }
+        
+        .remove-btn {
+            background: #c92a2a;
+            color: white;
+        }
+        
+        .admin-logo {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: #1a2a6c;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .file-size-warning {
+            font-size: 0.95rem;
+            color: #e67700;
+            margin-top: 8px;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px;
+            background: #fff9db;
+            border-radius: 6px;
+            border: 1px dashed #e67700;
+        }
+        
+        .required-field:after {
+            content: " *";
+            color: #c92a2a;
+        }
+        
+        .municipio-loading {
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .upload-progress {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .upload-progress-bar {
+            height: 100%;
+            background: #1a2a6c;
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        .upload-status {
+            font-size: 0.9rem;
+            color: #495057;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .file-large-warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 0 6px 6px 0;
+            font-weight: 500;
+        }
+        
+        /* Nuevos estilos para mejoras de UX */
+        .uploading-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .upload-status-container {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #1a2a6c;
+        }
+        
+        /* Nuevos estilos para descargas */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #1a2a6c;
+            color: white;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: #0d1a4a;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-contract"></i> Sistema de Gestión de Créditos</h1>
+            <p class="subtitle">Global Pacific SAS - Versión 2023</p>
+            <button id="adminButton" class="btn btn-secondary" style="margin-top: 25px;">
+                <i class="fas fa-lock"></i> Acceso Administración
+            </button>
+            
+            <div id="adminLogo" class="admin-logo" style="display: none;">
+                <i class="fas fa-user-shield"></i> Modo Administrador
+            </div>
+        </header>
+        
+        <!-- Formulario principal -->
+        <div id="formContainer" class="form-container">
+            <div class="form-header">
+                <i class="fas fa-user-edit"></i>
+                <span>1. Identificación del Cliente</span>
+            </div>
+            
+            <div class="form-body">
+                <div class="form-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName" class="required-field"><i class="fas fa-user"></i> Nombre Completo y/o Razón Social:</label>
+                            <input type="text" id="fullName" placeholder="Ingrese nombre completo o razón social" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idType" class="required-field"><i class="fas fa-id-card"></i> Identificación:</label>
+                            <div style="display: flex; gap: 12px;">
+                                <select id="idType" style="flex: 1;" required>
+                                    <option value="">Tipo</option>
+                                    <option value="C.C">C.C</option>
+                                    <option value="NIT">NIT</option>
+                                </select>
+                                <input type="text" id="idNumber" placeholder="Número" style="flex: 2;" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="address" class="required-field"><i class="fas fa-map-marker-alt"></i> Dirección:</label>
+                            <input type="text" id="address" placeholder="Ingrese dirección completa" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="department" class="required-field"><i class="fas fa-globe-americas"></i> Departamento:</label>
+                            <select id="department" required>
+                                <option value="">Seleccione un departamento</option>
+                                <!-- Departamentos se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="city" class="required-field"><i class="fas fa-city"></i> Ciudad/Municipio:</label>
+                            <select id="city" required disabled>
+                                <option value="">Primero seleccione un departamento</option>
+                                <!-- Municipios se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone" class="required-field"><i class="fas fa-phone"></i> Teléfono (Principal):</label>
+                            <input type="tel" id="phone" placeholder="Teléfono principal" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email" class="required-field"><i class="fas fa-envelope"></i> Email:</label>
+                            <input type="email" id="email" placeholder="Correo electrónico" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mobile" class="required-field"><i class="fas fa-mobile-alt"></i> Celular:</label>
+                            <input type="tel" id="mobile" placeholder="Número de celular" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="legalNature" class="required-field"><i class="fas fa-balance-scale"></i> Naturaleza Jurídica:</label>
+                            <select id="legalNature" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="juridica">Persona Jurídica</option>
+                                <option value="natural">Persona Natural</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Tipo de Persona</span>
+                </div>
+                
+                <div class="person-type">
+                    <div class="person-card selected" id="juridicaCard" onclick="selectPersonType('juridica')">
+                        <h3><i class="fas fa-building"></i> Persona Jurídica</h3>
+                        <p>Seleccione esta opción si representa una empresa u organización.</p>
+                        <ul class="document-list">
+                            <li>Solicitud de actualización de crédito (diligenciada y firmada)</li>
+                            <li>Estados financieros dos años más recientes</li>
+                            <li>Última declaración de renta año más reciente</li>
+                            <li>Fotocopia CC representante legal</li>
+                            <li>RUT</li>
+                            <li>Cámara de comercio no mayor a 3 meses</li>
+                            <li>2 referencias comerciales (crédito vigente)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="person-card" id="naturalCard" onclick="selectPersonType('natural')">
+                        <h3><i class="fas fa-user"></i> Persona Natural</h3>
+                        <p>Seleccione esta opción si es una persona individual.</p>
+                        <ul class="document-list">
+                            <li>Solicitud de actualización de crédito (diligenciada y firmada)</li>
+                            <li>Pagaré firmado</li>
+                            <li>Última declaración de renta más reciente</li>
+                            <li>RUT</li>
+                            <li>Cámara de comercio no mayor a 3 meses</li>
+                            <li>Fotocopia CC y extractos del último trimestre</li>
+                            <li>2 referencias comerciales (crédito vigente)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="section-title">
+                    <i class="fas fa-file-contract"></i>
+                    <span>9. Documentos Requeridos</span>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div style="text-align: center; margin-bottom: 18px; font-weight: 600; font-size: 1.1rem;">
+                    <span id="progressText">0% completado</span>
+                </div>
+                
+                <div class="documents-section">
+                    <div class="file-large-warning">
+                        <i class="fas fa-info-circle"></i> Ahora puede subir archivos de hasta 100MB. Para archivos muy grandes, el proceso puede tardar unos segundos.
+                    </div>
+                    
+                    <table class="document-table">
+                        <thead>
+                            <tr>
+                                <th>Documento Requerido</th>
+                                <th>Archivo</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="documentsBody">
+                            <!-- Documentos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                    <p class="file-size-warning"><i class="fas fa-exclamation-triangle"></i> Tamaño máximo por archivo: 100MB</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="saveForm()">
+                        <i class="fas fa-save"></i> Guardar Todo
+                    </button>
+                    <button class="btn btn-success" onclick="validateDocuments()">
+                        <i class="fas fa-check-circle"></i> Validar Documentos
+                    </button>
+                    <button class="btn btn-danger" onclick="clearForm()">
+                        <i class="fas fa-trash-alt"></i> Limpiar Formulario
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel de administración -->
+        <div id="adminPanel" class="admin-panel">
+            <div class="admin-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Panel de Administración</h2>
+                <a href="#" class="back-button" id="backButton"><i class="fas fa-arrow-left"></i> Volver al Formulario</a>
+            </div>
+            
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="loadSubmissions()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+                <button class="btn btn-success" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                </button>
+                <button class="btn btn-info" onclick="openCredentialsModal()">
+                    <i class="fas fa-user-cog"></i> Cambiar Credenciales
+                </button>
+                <button class="btn btn-warning" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </button>
+            </div>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('dashboard')">Dashboard</div>
+                    <div class="tab" onclick="openTab('solicitudes')">Solicitudes</div>
+                    <div class="tab" onclick="openTab('reportes')">Reportes</div>
+                    <div class="tab" onclick="openTab('invitaciones')">Enlaces</div>
+                </div>
+                
+                <div id="dashboard" class="tab-content active">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3>Solicitudes Totales</h3>
+                            <div class="stat-value" id="totalRequests">0</div>
+                            <div class="stat-label">Registradas en el Sistema</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Completas</h3>
+                            <div class="stat-value" id="completeRequests">0</div>
+                            <div class="stat-label">Documentación Completa</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pendientes</h3>
+                            <div class="stat-value" id="pendingRequests">0</div>
+                            <div class="stat-label">Documentación Incompleta</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Personas Naturales</h3>
+                            <div class="stat-value" id="naturalRequests">0</div>
+                            <div class="stat-label">Solicitudes de Personas Naturales</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 25px 0 18px; color: #1a2a6c; border-bottom: 2px solid #eaeaea; padding-bottom: 12px;">
+                        Últimas Solicitudes
+                    </h3>
+                    <table class="submissions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Identificación</th>
+                                <th>Tipo</th>
+                                <th>Documentos</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentSubmissions">
+                            <!-- Últimas solicitudes se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="solicitudes" class="tab-content">
+                    <div style="margin: 25px 0; display: flex; gap: 18px; flex-wrap: wrap;">
+                        <input type="text" id="searchInput" placeholder="Buscar por nombre o identificación" style="flex: 1; min-width: 280px; padding: 12px; border-radius: 6px;">
+                        <button class="btn btn-primary" onclick="searchSubmissions()">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                    
+                    <table class="submissions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Identificación</th>
+                                <th>Tipo</th>
+                                <th>Documentos</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody">
+                            <!-- Las solicitudes se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="reportes" class="tab-content">
+                    <h3 style="margin: 25px 0 18px; color: #1a2a6c; border-bottom: 2px solid #eaeaea; padding-bottom: 12px;">
+                        Reportes y Estadísticas
+                    </h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Fecha Inicio:</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">Fecha Fin:</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="reportType">Tipo de Reporte:</label>
+                            <select id="reportType">
+                                <option value="all">Todos los Registros</option>
+                                <option value="complete">Documentación Completa</option>
+                                <option value="incomplete">Documentación Incompleta</option>
+                                <option value="natural">Personas Naturales</option>
+                                <option value="juridica">Personas Jurídicas</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 25px 0;">
+                        <button class="btn btn-success" onclick="generateReport()">
+                            <i class="fas fa-chart-bar"></i> Generar Reporte
+                        </button>
+                        <button class="btn btn-primary" onclick="exportReport()">
+                            <i class="fas fa-download"></i> Exportar Reporte
+                        </button>
+                    </div>
+                    
+                    <div id="reportResults" style="margin-top: 25px;">
+                        <!-- Resultados del reporte se mostrarán aquí -->
+                    </div>
+                </div>
+                
+                <!-- Nueva pestaña para generación de enlaces -->
+                <div id="invitaciones" class="tab-content">
+                    <div class="link-form">
+                        <h3><i class="fas fa-user-plus"></i> Generar Enlace Personalizado</h3>
+                        <p>Cree un enlace personalizado para compartir con sus clientes. Al abrirlo, el formulario se pre-llenará con los datos del cliente.</p>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="clientName"><i class="fas fa-user"></i> Nombre del Cliente:</label>
+                                <input type="text" id="clientName" placeholder="Ingrese nombre completo del cliente" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="clientId"><i class="fas fa-id-card"></i> Identificación:</label>
+                                <input type="text" id="clientId" placeholder="Número de identificación" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="clientEmail"><i class="fas fa-envelope"></i> Email (Opcional):</label>
+                                <input type="email" id="clientEmail" placeholder="Correo electrónico del cliente">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="clientType"><i class="fas fa-users"></i> Tipo de Persona:</label>
+                                <select id="clientType">
+                                    <option value="juridica">Persona Jurídica</option>
+                                    <option value="natural">Persona Natural</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-success" onclick="generateClientLink()" style="width: 100%;">
+                            <i class="fas fa-link"></i> Generar Enlace Personalizado
+                        </button>
+                        
+                        <div id="generatedLink" class="generated-link" style="display: none;">
+                            <h4><i class="fas fa-check-circle" style="color: #2b8a3e;"></i> Enlace Generado</h4>
+                            <a id="clientSpecificLink" href="#" target="_blank"></a>
+                            
+                            <div class="qr-container" id="qrCodeContainer"></div>
+                            
+                            <div class="link-actions">
+                                <button class="btn btn-info" onclick="copySpecificLink()">
+                                    <i class="fas fa-copy"></i> Copiar Enlace
+                                </button>
+                                <button class="btn btn-primary" onclick="emailClientLink()">
+                                    <i class="fas fa-envelope"></i> Enviar por Email
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="client-list">
+                        <h3><i class="fas fa-users"></i> Clientes con Enlaces Generados</h3>
+                        <div id="clientLinksList">
+                            <!-- Lista de clientes con enlaces generados -->
+                        </div>
+                    </div>
+                    
+                    <div class="link-form" style="margin-top: 30px;">
+                        <h3><i class="fas fa-share-alt"></i> Instrucciones para Compartir</h3>
+                        <ol style="margin-left: 25px; padding: 18px 0; font-weight: 500;">
+                            <li style="margin-bottom: 12px;"><strong>Genera el enlace:</strong> Completa los datos del cliente y haz clic en "Generar Enlace Personalizado".</li>
+                            <li style="margin-bottom: 12px;"><strong>Copia el enlace:</strong> Haz clic en "Copiar Enlace" o utiliza el código QR para compartirlo fácilmente.</li>
+                            <li style="margin-bottom: 12px;"><strong>Comparte con el cliente:</strong> Envía el enlace por email, WhatsApp, SMS o cualquier otro medio.</li>
+                            <li style="margin-bottom: 12px;"><strong>El cliente completa el formulario:</strong> Al abrir el enlace, los datos estarán pre-llenados y sólo deberá subir los documentos requeridos.</li>
+                            <li><strong>Recibe la solicitud:</strong> Las solicitudes completadas aparecerán en el panel de administración.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección para cambiar credenciales -->
+            <div class="credentials-form">
+                <h3><i class="fas fa-key"></i> Gestión de Credenciales</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Usuario actual: <span id="currentUser">admin</span></label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <button class="btn btn-info" onclick="openCredentialsModal()">
+                            <i class="fas fa-edit"></i> Cambiar Usuario y Contraseña
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Global Pacific SAS &copy; 2023 | Cra 42 nro 50a-40, Itagüí, Colombia</p>
+            <p>Tel: (604) 123 4567 | Email: contabilidad@globalpacificsas.com</p>
+        </footer>
+    </div>
+    
+    <!-- Modal para detalles de solicitud -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <!-- Modal para cambiar credenciales -->
+    <div class="modal" id="credentialsModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeCredentialsModal()">&times;</span>
+            <h3 style="color: #1a2a6c; margin-bottom: 25px; text-align: center; text-transform: uppercase;">
+                <i class="fas fa-user-cog"></i> Cambiar Credenciales
+            </h3>
+            
+            <div class="form-group">
+                <label for="currentUsername">Usuario Actual:</label>
+                <input type="text" id="currentUsername" placeholder="Usuario actual" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="currentPassword">Contraseña Actual:</label>
+                <input type="password" id="currentPassword" placeholder="Contraseña actual" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="newUsername">Nuevo Usuario:</label>
+                <input type="text" id="newUsername" placeholder="Nuevo usuario" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="newPassword">Nueva Contraseña:</label>
+                <input type="password" id="newPassword" placeholder="Nueva contraseña" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirmar Contraseña:</label>
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="changeCredentials()">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <button class="btn btn-danger" onclick="closeCredentialsModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de login -->
+    <div id="loginPanel" class="login-container" style="display: none;">
+        <h2><i class="fas fa-lock"></i> Acceso Administrativo</h2>
+        <input type="text" id="username" placeholder="Usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+        <button class="btn btn-primary" onclick="login()">
+            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+        </button>
+    </div>
+    
+    <div class="notification" id="notification">
+        Mensaje de notificación
+    </div>
+
+    <script>
+        // Datos para documentos requeridos (todos en mayúsculas)
+        const documentosRequeridos = {
+            juridica: [
+                "SOLICITUD DE ACTUALIZACIÓN DE CRÉDITO (DILIGENCIADA Y FIRMADA)",
+                "ESTADOS FINANCIEROS DOS AÑOS MÁS RECIENTES",
+                "ÚLTIMA DECLARACIÓN DE RENTA AÑO MÁS RECIENTE",
+                "FOTOCOPIA CC REPRESENTANTE LEGAL",
+                "RUT",
+                "CÁMARA DE COMERCIO NO MAYOR A 3 MESES",
+                "2 REFERENCIAS COMERCIALES (CRÉDITO VIGENTE)"
+            ],
+            natural: [
+                "SOLICITUD DE ACTUALIZACIÓN DE CRÉDITO (DILIGENCIADA Y FIRMADA)",
+                "PAGARÉ FIRMADO",
+                "ÚLTIMA DECLARACIÓN DE RENTA MÁS RECIENTE",
+                "RUT",
+                "CÁMARA DE COMERCIO NO MAYOR A 3 MESES",
+                "FOTOCOPIA CC Y EXTRACTOS DEL ÚLTIMO TRIMESTRE",
+                "2 REFERENCIAS COMERCIALES (CRÉDITO VIGENTE)"
+            ]
+        };
+        
+        // Datos de departamentos y municipios de Colombia (completos)
+        const departamentosColombia = [
+            "Amazonas", "Antioquia", "Arauca", "Atlántico", "Bogotá D.C.", 
+            "Bolívar", "Boyacá", "Caldas", "Caquetá", "Casanare", "Cauca", 
+            "Cesar", "Chocó", "Córdoba", "Cundinamarca", "Guainía", "Guaviare", 
+            "Huila", "La Guajira", "Magdalena", "Meta", "Nariño", "Norte de Santander", 
+            "Putumayo", "Quindío", "Risaralda", "San Andrés y Providencia", 
+            "Santander", "Sucre", "Tolima", "Valle del Cauca", "Vaupés", "Vichada"
+        ];
+        
+        const municipiosPorDepartamento = {
+            "Amazonas": ["Leticia", "El Encanto", "La Chorrera", "La Pedrera", "La Victoria", "Miriti - Paraná", "Puerto Alegria", "Puerto Arica", "Puerto Nariño", "Puerto Santander", "Tarapacá"],
+            "Antioquia": ["Medellín", "Abejorral", "Abriaquí", "Alejandría", "Amagá", "Amalfi", "Andes", "Angelópolis", "Angostura", "Anorí", "Anza", "Apartadó", "Arboletes", "Argelia", "Armenia", "Barbosa", "Bello", "Belmira", "Betania", "Betulia", "Briceño", "Buriticá", "Cáceres", "Caicedo", "Caldas", "Campamento", "Cañasgordas", "Caracolí", "Caramanta", "Carepa", "Carolina", "Caucasia", "Chigorodó", "Cisneros", "Ciudad Bolívar", "Cocorná", "Concepción", "Concordia", "Copacabana", "Dabeiba", "Don Matías", "Ebéjico", "El Bagre", "El Carmen de Viboral", "El Santuario", "Entrerríos", "Envigado", "Fredonia", "Frontino", "Giraldo", "Girardota", "Gómez Plata", "Granada", "Guadalupe", "Guarne", "Guatapé", "Heliconia", "Hispania", "Itagüí", "Ituango", "Jardín", "Jericó", "La Ceja", "La Estrella", "La Pintada", "La Unión", "Liborina", "Maceo", "Marinilla", "Montebello", "Murindó", "Mutatá", "Nariño", "Nechí", "Necoclí", "Olaya", "Peque", "Pueblorrico", "Puerto Berrío", "Puerto Nare", "Puerto Triunfo", "Remedios", "Retiro", "Rionegro", "Sabanalarga", "Sabaneta", "Salgar", "San Andrés de Cuerquía", "San Carlos", "San Francisco", "San Jerónimo", "San José de la Montaña", "San Juan de Urabá", "San Luis", "San Pedro de los Milagros", "San Pedro de Urabá", "San Rafael", "San Roque", "San Vicente", "Santa Bárbara", "Santa Fe de Antioquia", "Santa Rosa de Osos", "Santo Domingo", "Segovia", "Sonsón", "Sopetrán", "Támesis", "Tarazá", "Tarso", "Titiribí", "Toledo", "Turbo", "Uramita", "Urrao", "Valdivia", "Valparaíso", "Vegachí", "Venecia", "Vigía del Fuerte", "Yalí", "Yarumal", "Yolombó", "Yondó", "Zaragoza"],
+            "Arauca": ["Arauca", "Arauquita", "Cravo Norte", "Fortul", "Puerto Rondón", "Saravena", "Tame"],
+            "Atlántico": ["Barranquilla", "Baranoa", "Campo de la Cruz", "Candelaria", "Galapa", "Juan de Acosta", "Luruaco", "Malambo", "Manatí", "Palmar de Varela", "Piojó", "Polonuevo", "Ponedera", "Puerto Colombia", "Repelón", "Sabanagrande", "Sabanalarga", "Santa Lucía", "Santo Tomás", "Soledad", "Suán", "Tubará", "Usiacurí"],
+            "Bogotá D.C.": ["Bogotá"],
+            "Bolívar": ["Cartagena", "Achí", "Altos del Rosario", "Arenal", "Arjona", "Arroyohondo", "Barranco de Loba", "Calamar", "Cantagallo", "Carmen de Bolívar", "Cicuco", "Córdoba", "Clemencia", "El Carmen de Bolívar", "El Guamo", "El Peñón", "Hatillo de Loba", "Magangué", "Mahates", "Margarita", "María la Baja", "Mompós", "Montecristo", "Morales", "Norosí", "Pinillos", "Regidor", "Río Viejo", "San Cristóbal", "San Estanislao", "San Fernando", "San Jacinto del Cauca", "San Juan Nepomuceno", "San Martín de Loba", "San Pablo", "Santa Catalina", "Santa Rosa", "Santa Rosa del Sur", "Simití", "Soplaviento", "Talaigua Nuevo", "Tiquisio", "Turbaco", "Turbana", "Villanueva", "Zambrano"],
+            "Boyacá": ["Tunja", "Almeida", "Aquitania", "Arcabuco", "Belén", "Berbeo", "Betéitiva", "Boavita", "Boyacá", "Briceño", "Buenavista", "Busbanzá", "Caldas", "Campohermoso", "Cerinza", "Chinavita", "Chiquinquirá", "Chíquiza", "Chiscas", "Chita", "Chitaraque", "Chivatá", "Ciénega", "Cómbita", "Coper", "Corrales", "Covarachía", "Cubará", "Cucaita", "Cuítiva", "Duitama", "El Cocuy", "El Espino", "Firavitoba", "Floresta", "Gachantivá", "Gámeza", "Garagoa", "Guacamayas", "Guateque", "Guayatá", "Güicán", "Iza", "Jenesano", "Jericó", "La Capilla", "La Uvita", "La Victoria", "Labranzagrande", "Macanal", "Maripí", "Miraflores", "Mongua", "Monguí", "Moniquirá", "Motavita", "Muzo", "Nobsa", "Nuevo Colón", "Oicatá", "Otanche", "Pachavita", "Páez", "Paipa", "Pajarito", "Panqueba", "Pauna", "Paya", "Paz de Río", "Pesca", "Pisba", "Puerto Boyacá", "Quípama", "Ramiriquí", "Ráquira", "Rondón", "Saboyá", "Sáchica", "Samacá", "San Eduardo", "San José de Pare", "San Luis de Gaceno", "San Mateo", "San Miguel de Sema", "San Pablo de Borbur", "Santa María", "Santa Rosa de Viterbo", "Santa Sofía", "Santana", "Sativanorte", "Sativasur", "Siachoque", "Soatá", "Socha", "Socotá", "Sogamoso", "Somondoco", "Sora", "Soracá", "Sotaquirá", "Susacón", "Sutamarchán", "Sutatenza", "Tasco", "Tenza", "Tibaná", "Tibasosa", "Tinjacá", "Tipacoque", "Toca", "Togüí", "Tópaga", "Tota", "Tununguá", "Turmequé", "Tuta", "Tutazá", "Umbita", "Ventaquemada", "Villa de Leyva", "Viracachá", "Zetaquira"],
+            "Caldas": ["Manizales", "Aguadas", "Anserma", "Aranzazu", "Belalcázar", "Chinchiná", "Filadelfia", "La Dorada", "La Merced", "Manzanares", "Marmato", "Marquetalia", "Marulanda", "Neira", "Norcasia", "Pácora", "Palestina", "Pensilvania", "Riosucio", "Risaralda", "Salamina", "Samaná", "San José", "Supía", "Victoria", "Villamaría", "Viterbo"],
+            "Caquetá": ["Florencia", "Albania", "Belén de los Andaquíes", "Cartagena del Chairá", "Curillo", "El Doncello", "El Paujíl", "La Montañita", "Milán", "Morelia", "Puerto Rico", "San José del Fragua", "San Vicente del Caguán", "Solano", "Solita", "Valparaíso"],
+            "Casanare": ["Yopal", "Aguazul", "Chámeza", "Hato Corozal", "La Salina", "Maní", "Monterrey", "Nunchía", "Orocué", "Paz de Ariporo", "Pore", "Recetor", "Sabanalarga", "Sácama", "San Luis de Palenque", "Támara", "Tauramena", "Trinidad", "Villanueva"],
+            "Cauca": ["Popayán", "Almaguer", "Argelia", "Balboa", "Bolívar", "Buenos Aires", "Cajibío", "Caldono", "Caloto", "Corinto", "El Tambo", "Florencia", "Guachené", "Guapi", "Inzá", "Jambaló", "La Sierra", "La Vega", "López de Micay", "Mercaderes", "Miranda", "Morales", "Padilla", "Páez", "Patía", "Piamonte", "Piendamó", "Puerto Tejada", "Puracé", "Rosas", "San Sebastián", "Santa Rosa", "Santander de Quilichao", "Silvia", "Sotará", "Suárez", "Sucre", "Timbío", "Timbiquí", "Toribío", "Totoró", "Villa Rica"],
+            "Cesar": ["Valledupar", "Aguachica", "Agustín Codazzi", "Astrea", "Becerril", "Bosconia", "Chimichagua", "Chiriguaná", "Curumaní", "El Copey", "El Paso", "Gamarra", "González", "La Gloria", "La Jagua de Ibirico", "Manaure", "Pailitas", "Pelaya", "Pueblo Bello", "Río de Oro", "San Alberto", "San Diego", "San Martín", "Tamalameque", "Urumita"],
+            "Chocó": ["Quibdó", "Acandí", "Alto Baudó", "Atrato", "Bagadó", "Bahía Solano", "Bajo Baudó", "Bojayá", "Cantón de San Pablo", "Carmen del Darién", "Cértegui", "Condoto", "El Carmen de Atrato", "El Litoral del San Juan", "Istmina", "Juradó", "Lloró", "Medio Atrato", "Medio Baudó", "Medio San Juan", "Nóvita", "Nuquí", "Río Iró", "Río Quito", "Riosucio", "San José del Palmar", "Sipí", "Tadó", "Unguía", "Unión Panamericana"],
+            "Córdoba": ["Montería", "Ayapel", "Buenavista", "Canalete", "Cereté", "Chimá", "Chinú", "Ciénaga de Oro", "Cotorra", "La Apartada", "Lorica", "Los Córdobas", "Momil", "Montelíbano", "Moñitos", "Planeta Rica", "Pueblo Nuevo", "Puerto Escondido", "Puerto Libertador", "Purísima", "Sahagún", "San Andrés de Sotavento", "San Antero", "San Bernardo del Viento", "San Carlos", "San José de Uré", "San Pelayo", "Santa Cruz de Lorica", "Tierralta", "Tuchín", "Valencia"],
+            "Cundinamarca": ["Bogotá", "Agua de Dios", "Albán", "Anapoima", "Anolaima", "Apulo", "Arbeláez", "Beltrán", "Bituima", "Bojacá", "Cabrera", "Cachipay", "Cajicá", "Caparrapí", "Cáqueza", "Carmen de Carupa", "Chaguaní", "Chía", "Chipaque", "Choachí", "Chocontá", "Cogua", "Cota", "Cucunubá", "El Colegio", "El Peñón", "El Rosal", "Facatativá", "Fómeque", "Fosca", "Funza", "Fúquene", "Fusagasugá", "Gachalá", "Gachancipá", "Gachetá", "Gama", "Girardot", "Granada", "Guachetá", "Guaduas", "Guasca", "Guataquí", "Guatavita", "Guayabal de Síquima", "Guayabetal", "Gutiérrez", "Jerusalén", "Junín", "La Calera", "La Mesa", "La Palma", "La Peña", "La Vega", "Lenguazaque", "Machetá", "Madrid", "Manta", "Medina", "Mosquera", "Nariño", "Nemocón", "Nilo", "Nimaima", "Nocaima", "Ospina Pérez", "Pacho", "Paime", "Pandi", "Paratebueno", "Pasca", "Puerto Salgar", "Pulí", "Quebradanegra", "Quetame", "Quipile", "Ricaurte", "San Antonio del Tequendama", "San Bernardo", "San Cayetano", "San Francisco", "San Juan de Rioseco", "Sasaima", "Sesquilé", "Sibaté", "Silvania", "Simijaca", "Soacha", "Sopó", "Subachoque", "Suesca", "Supatá", "Susa", "Sutatausa", "Tabio", "Tausa", "Tena", "Tenjo", "Tibacuy", "Tibirita", "Tocaima", "Tocancipá", "Topaipí", "Ubalá", "Ubaque", "Ubaté", "Une", "Útica", "Venecia", "Vergara", "Vianí", "Villa de San Diego de Ubaté", "Villagómez", "Villapinzón", "Villeta", "Viotá", "Yacopí", "Zipacón", "Zipaquirá"],
+            "Guainía": ["Inírida", "Barranco Minas", "Cacahual", "La Guadalupe", "Mapiripana", "Morichal", "Pana Pana", "Puerto Colombia", "San Felipe"],
+            "Guaviare": ["San José del Guaviare", "Calamar", "El Retorno", "Miraflores"],
+            "Huila": ["Neiva", "Acevedo", "Agrado", "Aipe", "Algeciras", "Altamira", "Baraya", "Campoalegre", "Colombia", "Elías", "Garzón", "Gigante", "Guadalupe", "Hobo", "Íquira", "Isnos", "La Argentina", "La Plata", "Nátaga", "Oporapa", "Paicol", "Palermo", "Palestina", "Pital", "Pitalito", "Rivera", "Saladoblanco", "San Agustín", "Santa María", "Suaza", "Tarqui", "Tello", "Teruel", "Tesalia", "Timaná", "Villavieja", "Yaguará"],
+            "La Guajira": ["Riohacha", "Albania", "Barrancas", "Dibulla", "Distracción", "El Molino", "Fonseca", "Hatonuevo", "La Jagua del Pilar", "Manaure", "Maicao", "San Juan del Cesar", "Uribia", "Urumita", "Villanueva"],
+            "Magdalena": ["Santa Marta", "Algarrobo", "Aracataca", "Ariguaní", "Cerro de San Antonio", "Chibolo", "Chibolo", "Ciénaga", "Concordia", "El Banco", "El Piñón", "El Retén", "Fundación", "Guamal", "Nueva Granada", "Pedraza", "Pijiño del Carmen", "Pivijay", "Plato", "Pueblo Viejo", "Remolino", "Sabanas de San Ángel", "Salamina", "San Sebastián de Buenavista", "San Zenón", "Santa Ana", "Santa Bárbara de Pinto", "Sitionuevo", "Tenerife", "Zapayán", "Zona Bananera"],
+            "Meta": ["Villavicencio", "Acacías", "Barranca de Upía", "Cabuyaro", "Castilla la Nueva", "Cubarral", "Cumaral", "El Calvario", "El Castillo", "El Dorado", "Fuente de Oro", "Granada", "Guamal", "Mapiripán", "Mesetas", "La Macarena", "La Uribe", "Lejanías", "Puerto Concordia", "Puerto Gaitán", "Puerto Lleras", "Puerto López", "Puerto Rico", "Restrepo", "San Carlos de Guaroa", "San Juan de Arama", "San Juanito", "San Martín", "Vista Hermosa"],
+            "Nariño": ["Pasto", "Albán", "Aldana", "Ancuyá", "Arboleda", "Barbacoas", "Belén", "Buesaco", "Chachagüí", "Colón", "Consacá", "Contadero", "Córdoba", "Cuaspud", "Cumbal", "Cumbitara", "El Charco", "El Peñol", "El Rosario", "El Tablón de Gómez", "El Tambo", "Francisco Pizarro", "Funes", "Guachucal", "Guaitarilla", "Gualmatán", "Iles", "Imués", "Ipiales", "La Cruz", "La Florida", "La Llanada", "La Tola", "La Unión", "Leiva", "Linares", "Los Andes", "Magüí", "Mallama", "Mosquera", "Nariño", "Olaya Herrera", "Ospina", "Policarpa", "Potosí", "Providencia", "Puerres", "Pupiales", "Ricaurte", "Roberto Payán", "Samaniego", "San Bernardo", "San Lorenzo", "San Pablo", "San Pedro de Cartago", "Sandoná", "Santa Bárbara", "Santacruz", "Sapuyes", "Taminango", "Tangua", "Tumaco", "Túquerres", "Yacuanquer"],
+            "Norte de Santander": ["Cúcuta", "Abrego", "Arboledas", "Bochalema", "Bucarasica", "Cácota", "Cachirá", "Chinácota", "Chitagá", "Convención", "Cúcuta", "Cucutilla", "Durania", "El Carmen", "El Tarra", "El Zulia", "Gramalote", "Hacarí", "Herrán", "La Esperanza", "La Playa", "Labateca", "Los Patios", "Lourdes", "Mutiscua", "Ocaña", "Pamplona", "Pamplonita", "Puerto Santander", "Ragonvalia", "Salazar", "San Calixto", "San Cayetano", "Santiago", "Sardinata", "Silos", "Teorama", "Tibú", "Toledo", "Villa Caro", "Villa del Rosario"],
+            "Putumayo": ["Mocoa", "Colón", "Orito", "Puerto Asís", "Puerto Caicedo", "Puerto Guzmán", "Puerto Leguízamo", "San Francisco", "San Miguel", "Santiago", "Sibundoy", "Valle del Guamuez", "Villagarzón"],
+            "Quindío": ["Armenia", "Buenavista", "Calarcá", "Circasia", "Córdoba", "Filandia", "Génova", "La Tebaida", "Montenegro", "Pijao", "Quimbaya", "Salento"],
+            "Risaralda": ["Pereira", "Apía", "Balboa", "Belén de Umbría", "Dosquebradas", "Guática", "La Celia", "La Virginia", "Marsella", "Mistrató", "Pueblo Rico", "Quinchía", "Santa Rosa de Cabal", "Santuario"],
+            "San Andrés y Providencia": ["San Andrés", "Providencia"],
+            "Santander": ["Bucaramanga", "Aguada", "Albania", "Aratoca", "Barbosa", "Barichara", "Barrancabermeja", "Betulia", "Bolívar", "Cabrera", "California", "Capitanejo", "Carcasí", "Cepitá", "Cerrito", "Charalá", "Charta", "Chima", "Chipatá", "Cimitarra", "Concepción", "Confines", "Contratación", "Coromoro", "Curití", "El Carmen de Chucurí", "El Guacamayo", "El Peñón", "El Playón", "Encino", "Enciso", "Floridablanca", "Florián", "Galán", "Gámbita", "Girón", "Guaca", "Guadalupe", "Guapotá", "Guavatá", "Güepsa", "Hato", "Jesús María", "Jordán", "La Belleza", "La Paz", "Landázuri", "Lebrija", "Los Santos", "Macaravita", "Málaga", "Matanza", "Mogotes", "Molagavita", "Ocamonte", "Oiba", "Onzaga", "Palmar", "Palmas del Socorro", "Páramo", "Piedecuesta", "Pinchote", "Puente Nacional", "Puerto Parra", "Puerto Wilches", "Rionegro", "Sabana de Torres", "San Andrés", "San Benito", "San Gil", "San Joaquín", "San José de Miranda", "San Miguel", "San Vicente de Chucurí", "Santa Bárbara", "Santa Helena del Opón", "Simacota", "Socorro", "Suaita", "Sucre", "Suratá", "Tona", "Valle de San José", "Vélez", "Vetas", "Villanueva", "Zapatoca"],
+            "Sucre": ["Sincelejo", "Buenavista", "Caimito", "Chalán", "Colosó", "Corozal", "Coveñas", "El Roble", "Galeras", "Guaranda", "La Unión", "Los Palmitos", "Majagual", "Morroa", "Ovejas", "Palmito", "Sampués", "San Benito Abad", "San Juan de Betulia", "San Marcos", "San Onofre", "San Pedro", "Sincé", "Sucre", "Tolú", "Tolú Viejo"],
+            "Tolima": ["Ibagué", "Alpujarra", "Alvarado", "Ambalema", "Anzoátegui", "Armero", "Ataco", "Cajamarca", "Carmen de Apicalá", "Casabianca", "Chaparral", "Coello", "Coyaima", "Cunday", "Dolores", "Espinal", "Falan", "Flandes", "Fresno", "Guamo", "Herveo", "Honda", "Icononzo", "Lérida", "Líbano", "Mariquita", "Melgar", "Murillo", "Natagaima", "Ortega", "Palocabildo", "Piedras", "Planadas", "Prado", "Purificación", "Rioblanco", "Roncesvalles", "Rovira", "Saldaña", "San Antonio", "San Luis", "Santa Isabel", "Suárez", "Valle de San Juan", "Venadillo", "Villahermosa"],
+            "Valle del Cauca": ["Cali", "Alcalá", "Andalucía", "Ansermanuevo", "Argelia", "Bolívar", "Buenaventura", "Buga", "Bugalagrande", "Caicedonia", "Calima", "Candelaria", "Cartago", "Dagua", "El Águila", "El Cairo", "El Cerrito", "El Dovio", "Florida", "Ginebra", "Guacarí", "Jamundí", "La Cumbre", "La Unión", "La Victoria", "Obando", "Palmira", "Pradera", "Restrepo", "Riofrío", "Roldanillo", "San Pedro", "Sevilla", "Toro", "Trujillo", "Tuluá", "Ulloa", "Versalles", "Vijes", "Yotoco", "Yumbo", "Zarzal"],
+            "Vaupés": ["Mitú", "Carurú", "Pacoa", "Papunaua", "Taraira", "Yavaraté"],
+            "Vichada": ["Puerto Carreño", "Cumaribo", "La Primavera", "Santa Rosalía"]
+        };
+
+        // Tipo de persona seleccionado
+        let tipoPersona = "juridica";
+        let documentosSubidos = {};
+        let isAdmin = false;
+        
+        // Credenciales de administrador
+        let adminCredentials = {
+            username: "admin",
+            password: "admin123"
+        };
+        
+        // Cargar credenciales guardadas si existen
+        const savedCredentials = localStorage.getItem('adminCredentials');
+        if (savedCredentials) {
+            adminCredentials = JSON.parse(savedCredentials);
+        }
+        
+        // Nuevo sistema de almacenamiento con IndexedDB
+        const dbName = 'CreditosDB';
+        const storeName = 'Documentos';
+        let db;
+        
+        // Inicializar la base de datos
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                
+                request.onerror = event => {
+                    console.error('Error al abrir la base de datos:', event.target.error);
+                    reject(event.target.error);
+                };
+                
+                request.onsuccess = event => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = event => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName, { keyPath: 'id' });
+                    }
+                };
+            });
+        }
+        
+        // Guardar un archivo en IndexedDB
+        function saveFileToDB(fileData) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('La base de datos no está inicializada');
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.add(fileData);
+                
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = event => reject(event.target.error);
+            });
+        }
+        
+        // Recuperar un archivo de IndexedDB
+        function getFileFromDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('La base de datos no está inicializada');
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const store = transaction.objectStore(storeName);
+                const request = store.get(id);
+                
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = event => reject(event.target.error);
+            });
+        }
+        
+        // Eliminar un archivo de IndexedDB
+        function deleteFileFromDB(id) {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('La base de datos no está inicializada');
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.delete(id);
+                
+                request.onsuccess = () => resolve();
+                request.onerror = event => reject(event.target.error);
+            });
+        }
+        
+        // Inicializar el formulario
+        document.addEventListener('DOMContentLoaded', async function() {
+            cargarDocumentos();
+            cargarDepartamentos();
+            
+            // Inicializar IndexedDB
+            try {
+                await initDB();
+                console.log('IndexedDB inicializado correctamente');
+            } catch (error) {
+                console.error('Error al inicializar IndexedDB:', error);
+                showNotification('Error al inicializar el almacenamiento de documentos', 'error');
+            }
+            
+            document.getElementById('legalNature').addEventListener('change', function() {
+                if (this.value === 'natural') {
+                    selectPersonType('natural');
+                } else if (this.value === 'juridica') {
+                    selectPersonType('juridica');
+                }
+            });
+            
+            // Eventos para administración
+            document.getElementById('adminButton').addEventListener('click', function() {
+                if (isAdmin) {
+                    showAdminPanel();
+                } else {
+                    showLogin();
+                }
+            });
+            
+            document.getElementById('backButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                hideAdminPanel();
+            });
+            
+            // Inicializar fechas para reportes
+            const today = new Date();
+            document.getElementById('startDate').value = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            
+            // Mostrar usuario actual
+            document.getElementById('currentUser').textContent = adminCredentials.username;
+            
+            // Cargar datos de cliente desde URL si existen
+            loadClientDataFromUrl();
+            
+            // Cargar lista de clientes con enlaces
+            updateClientLinksList();
+        });
+        
+        // Cargar departamentos en el select
+        function cargarDepartamentos() {
+            const select = document.getElementById('department');
+            departamentosColombia.forEach(depto => {
+                const option = document.createElement('option');
+                option.value = depto;
+                option.textContent = depto;
+                select.appendChild(option);
+            });
+            
+            // Evento para cargar municipios cuando se selecciona un departamento
+            select.addEventListener('change', function() {
+                cargarMunicipios(this.value);
+            });
+        }
+        
+        // Cargar municipios según departamento seleccionado
+        function cargarMunicipios(departamento) {
+            const select = document.getElementById('city');
+            select.innerHTML = '<option value="">Cargando municipios...</option>';
+            select.disabled = true;
+            
+            setTimeout(() => {
+                select.innerHTML = '<option value="">Seleccione un municipio</option>';
+                
+                if (departamento && municipiosPorDepartamento[departamento]) {
+                    municipiosPorDepartamento[departamento].forEach(municipio => {
+                        const option = document.createElement('option');
+                        option.value = municipio;
+                        option.textContent = municipio;
+                        select.appendChild(option);
+                    });
+                    select.disabled = false;
+                } else {
+                    select.innerHTML = '<option value="">No se encontraron municipios</option>';
+                    select.disabled = true;
+                }
+            }, 500);
+        }
+        
+        // Cargar datos del cliente desde parámetros URL
+        function loadClientDataFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientName = urlParams.get('name');
+            const clientId = urlParams.get('id');
+            const clientType = urlParams.get('type');
+            const clientEmail = urlParams.get('email');
+            const clientDepto = urlParams.get('depto');
+            const clientCity = urlParams.get('city');
+            
+            if (clientName && clientId) {
+                document.getElementById('fullName').value = decodeURIComponent(clientName);
+                document.getElementById('idNumber').value = decodeURIComponent(clientId);
+                
+                if (clientEmail) {
+                    document.getElementById('email').value = decodeURIComponent(clientEmail);
+                }
+                
+                if (clientType) {
+                    selectPersonType(clientType);
+                    document.getElementById('legalNature').value = clientType;
+                }
+                
+                if (clientDepto) {
+                    document.getElementById('department').value = decodeURIComponent(clientDepto);
+                    cargarMunicipios(decodeURIComponent(clientDepto));
+                    
+                    if (clientCity) {
+                        setTimeout(() => {
+                            document.getElementById('city').value = decodeURIComponent(clientCity);
+                        }, 100);
+                    }
+                }
+                
+                showNotification(`Bienvenido ${decodeURIComponent(clientName)}! Sus datos se han cargado automáticamente.`, 'success');
+            }
+        }
+        
+        // Mostrar panel de login
+        function showLogin() {
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('loginPanel').style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+        
+        // Iniciar sesión
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === adminCredentials.username && password === adminCredentials.password) {
+                isAdmin = true;
+                document.getElementById('adminLogo').style.display = 'block';
+                showAdminPanel();
+                document.getElementById('loginPanel').style.display = 'none';
+                showNotification('Sesión iniciada correctamente', 'success');
+            } else {
+                showNotification('Credenciales incorrectas', 'error');
+            }
+        }
+        
+        // Cerrar sesión
+        function logout() {
+            isAdmin = false;
+            document.getElementById('adminLogo').style.display = 'none';
+            showLogin();
+            showNotification('Sesión cerrada correctamente', 'success');
+        }
+        
+        // Mostrar panel de administración
+        function showAdminPanel() {
+            if (!isAdmin) {
+                showLogin();
+                return;
+            }
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('loginPanel').style.display = 'none';
+            loadSubmissions();
+            updateDashboardStats();
+        }
+        
+        // Ocultar panel de administración
+        function hideAdminPanel() {
+            document.getElementById('formContainer').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+        
+        // Abrir modal para cambiar credenciales
+        function openCredentialsModal() {
+            document.getElementById('currentUsername').value = adminCredentials.username;
+            document.getElementById('credentialsModal').style.display = 'flex';
+        }
+        
+        // Cerrar modal de credenciales
+        function closeCredentialsModal() {
+            document.getElementById('credentialsModal').style.display = 'none';
+            document.getElementById('currentUsername').value = '';
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+        
+        // Función para seleccionar tipo de persona
+        function selectPersonType(tipo) {
+            tipoPersona = tipo;
+            document.getElementById('juridicaCard').classList.toggle('selected', tipo === 'juridica');
+            document.getElementById('naturalCard').classList.toggle('selected', tipo === 'natural');
+            document.getElementById('legalNature').value = tipo;
+            cargarDocumentos();
+        }
+        
+        // Función para cargar documentos
+        function cargarDocumentos() {
+            const documentos = documentosRequeridos[tipoPersona];
+            const tbody = document.getElementById('documentsBody');
+            tbody.innerHTML = '';
+            
+            documentos.forEach((documento, index) => {
+                const tr = document.createElement('tr');
+                
+                // Celda de documento
+                const tdDocumento = document.createElement('td');
+                tdDocumento.textContent = documento;
+                tr.appendChild(tdDocumento);
+                
+                // Celda de archivo
+                const tdArchivo = document.createElement('td');
+                const fileContainer = document.createElement('div');
+                fileContainer.className = 'file-upload';
+                
+                // Verificar si ya está subido
+                if (documentosSubidos[documento]) {
+                    fileContainer.innerHTML = `
+                        <div class="file-info">
+                            <i class="fas fa-file-pdf" style="color: #e74c3c; font-size: 1.8rem;"></i>
+                            <div>
+                                <div style="font-weight: 600;">${documentosSubidos[documento].name}</div>
+                                <div style="font-size: 0.95rem; color: #495057;">${formatBytes(documentosSubidos[documento].size)}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    fileContainer.innerHTML = `
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-upload"></i> Seleccionar Archivo
+                        </button>
+                        <input type="file" id="doc-${index}" data-doc="${documento}" onchange="documentUploaded(this, '${documento}')">
+                    `;
+                }
+                
+                tdArchivo.appendChild(fileContainer);
+                tr.appendChild(tdArchivo);
+                
+                // Celda de estado
+                const tdEstado = document.createElement('td');
+                if (documentosSubidos[documento]) {
+                    tdEstado.innerHTML = '<span class="document-status status-complete">ADJUNTADO</span>';
+                } else {
+                    tdEstado.innerHTML = '<span class="document-status status-pending">PENDIENTE</span>';
+                }
+                tr.appendChild(tdEstado);
+                
+                // Celda de acción
+                const tdAccion = document.createElement('td');
+                if (documentosSubidos[documento]) {
+                    const viewButton = document.createElement('button');
+                    viewButton.className = 'action-btn view-btn';
+                    viewButton.innerHTML = '<i class="fas fa-eye"></i> Ver';
+                    viewButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        viewDocument(documento);
+                    });
+                    
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'action-btn remove-btn';
+                    removeButton.innerHTML = '<i class="fas fa-trash"></i> Eliminar';
+                    removeButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        removeDocument(documento);
+                    });
+                    
+                    const actionContainer = document.createElement('div');
+                    actionContainer.className = 'document-actions';
+                    actionContainer.appendChild(viewButton);
+                    actionContainer.appendChild(removeButton);
+                    
+                    tdAccion.appendChild(actionContainer);
+                } else {
+                    tdAccion.innerHTML = '-';
+                }
+                tr.appendChild(tdAccion);
+                
+                tbody.appendChild(tr);
+            });
+            
+            actualizarProgreso();
+        }
+        
+        // Función para manejar la subida de documentos (capacidad aumentada a 100MB)
+        function documentUploaded(input, documento) {
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                const docId = input.id;
+                
+                // Validar tamaño del archivo (máximo 100MB)
+                const maxSize = 100 * 1024 * 1024; // 100MB
+                if (file.size > maxSize) {
+                    showNotification(`El archivo "${file.name}" excede el tamaño máximo permitido de 100MB`, 'error');
+                    input.value = ''; // Limpiar el input
+                    return;
+                }
+                
+                // Crear contenedor de progreso
+                const progressContainer = document.createElement('div');
+                progressContainer.className = 'upload-progress';
+                const progressBar = document.createElement('div');
+                progressBar.className = 'upload-progress-bar';
+                progressContainer.appendChild(progressBar);
+                
+                const statusText = document.createElement('div');
+                statusText.className = 'upload-status';
+                statusText.textContent = 'Preparando...';
+                
+                input.parentNode.appendChild(progressContainer);
+                input.parentNode.appendChild(statusText);
+                
+                // Actualizar progreso
+                const updateProgress = (progress) => {
+                    progressBar.style.width = `${progress}%`;
+                    statusText.textContent = `Subiendo: ${progress}%`;
+                };
+                
+                // Simular progreso para archivos grandes
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    if (progress < 95) {
+                        progress += 5;
+                        updateProgress(progress);
+                    }
+                }, 200);
+                
+                // Generar ID único para el archivo
+                const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                const reader = new FileReader();
+                
+                reader.onload = async function(e) {
+                    try {
+                        // Guardar en IndexedDB
+                        await saveFileToDB({
+                            id: fileId,
+                            name: file.name,
+                            size: file.size,
+                            type: file.type,
+                            content: e.target.result,
+                            docName: documento
+                        });
+                        
+                        clearInterval(progressInterval);
+                        updateProgress(100);
+                        
+                        // Almacenar solo referencia en memoria
+                        documentosSubidos[documento] = {
+                            id: fileId,
+                            name: file.name,
+                            size: file.size,
+                            type: file.type
+                        };
+                        
+                        setTimeout(() => {
+                            progressContainer.remove();
+                            statusText.remove();
+                            cargarDocumentos();
+                            showNotification(`"${file.name}" se ha adjuntado correctamente`, 'success');
+                        }, 500);
+                    } catch (error) {
+                        console.error('Error al guardar archivo:', error);
+                        clearInterval(progressInterval);
+                        progressContainer.remove();
+                        statusText.remove();
+                        showNotification(`Error al guardar el archivo "${file.name}"`, 'error');
+                    }
+                };
+                
+                reader.onerror = function() {
+                    clearInterval(progressInterval);
+                    progressContainer.remove();
+                    statusText.remove();
+                    showNotification(`Error al leer el archivo "${file.name}"`, 'error');
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Función para eliminar documento
+        async function removeDocument(documento) {
+            const fileInfo = documentosSubidos[documento];
+            if (fileInfo && fileInfo.id) {
+                try {
+                    await deleteFileFromDB(fileInfo.id);
+                    delete documentosSubidos[documento];
+                    cargarDocumentos();
+                    showNotification(`Documento "${documento}" eliminado`, 'success');
+                } catch (error) {
+                    console.error('Error al eliminar archivo:', error);
+                    showNotification(`Error al eliminar el documento "${documento}"`, 'error');
+                }
+            } else {
+                delete documentosSubidos[documento];
+                cargarDocumentos();
+                showNotification(`Documento "${documento}" eliminado`, 'success');
+            }
+        }
+        
+        // Función para ver documento
+        async function viewDocument(documento) {
+            const docInfo = documentosSubidos[documento];
+            if (docInfo && docInfo.id) {
+                try {
+                    const fileData = await getFileFromDB(docInfo.id);
+                    if (fileData && fileData.content) {
+                        const link = document.createElement('a');
+                        link.href = fileData.content;
+                        link.download = fileData.name;
+                        link.target = '_blank';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+                } catch (error) {
+                    console.error('Error al recuperar archivo:', error);
+                    showNotification(`Error al abrir el documento "${documento}"`, 'error');
+                }
+            }
+        }
+        
+        // Función para actualizar progreso
+        function actualizarProgreso() {
+            const documentos = documentosRequeridos[tipoPersona];
+            const total = documentos.length;
+            const completados = documentos.filter(doc => documentosSubidos[doc]).length;
+            const porcentaje = Math.round((completados / total) * 100);
+            
+            document.getElementById('progressBar').style.width = `${porcentaje}%`;
+            document.getElementById('progressText').textContent = `${porcentaje}% completado (${completados}/${total} documentos)`;
+        }
+        
+        // Función para validar documentos
+        function validateDocuments() {
+            const documentos = documentosRequeridos[tipoPersona];
+            const total = documentos.length;
+            const completados = documentos.filter(doc => documentosSubidos[doc]).length;
+            
+            if (completados === total) {
+                showNotification('¡Todos los documentos requeridos han sido adjuntados correctamente!', 'success');
+            } else {
+                showNotification(`Aún faltan ${total - completados} documentos por adjuntar. Por favor, complete todos los documentos requeridos.`, 'error');
+            }
+        }
+        
+        // Función para guardar el formulario
+        async function saveForm() {
+            // Validar campos básicos
+            const nombre = document.getElementById('fullName').value;
+            const id = document.getElementById('idNumber').value;
+            const idType = document.getElementById('idType').value;
+            
+            if (!nombre || !id || !idType) {
+                showNotification('Por favor complete los campos de identificación antes de guardar', 'error');
+                return;
+            }
+            
+            // Validar documentos
+            const documentos = documentosRequeridos[tipoPersona];
+            const total = documentos.length;
+            const completados = documentos.filter(doc => documentosSubidos[doc]).length;
+            
+            if (completados < total) {
+                showNotification(`Aún faltan ${total - completados} documentos por adjuntar. No se puede guardar.`, 'error');
+                return;
+            }
+            
+            try {
+                // Mostrar indicador de progreso
+                const saveButton = document.querySelector('.btn-primary');
+                const originalText = saveButton.innerHTML;
+                saveButton.innerHTML = '<div class="uploading-indicator"></div> Guardando...';
+                saveButton.disabled = true;
+                
+                // Recopilar datos del formulario
+                const formData = {
+                    fullName: nombre,
+                    idType: idType,
+                    idNumber: id,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    department: document.getElementById('department').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    mobile: document.getElementById('mobile').value,
+                    legalNature: tipoPersona,
+                    documents: {},
+                    timestamp: new Date().toISOString(),
+                    status: 'Completa'
+                };
+                
+                // Recuperar referencias de archivos desde documentosSubidos
+                for (const [docName, docInfo] of Object.entries(documentosSubidos)) {
+                    formData.documents[docName] = {
+                        id: docInfo.id,
+                        name: docInfo.name,
+                        size: docInfo.size,
+                        type: docInfo.type
+                    };
+                }
+                
+                // Guardar en localStorage
+                const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+                submissions.push(formData);
+                localStorage.setItem('submissions', JSON.stringify(submissions));
+                
+                showNotification('Formulario guardado exitosamente. Los documentos han sido enviados para revisión.', 'success');
+                clearForm(true);
+            } catch (error) {
+                console.error('Error al guardar el formulario:', error);
+                showNotification('Error al guardar el formulario. Por favor, intente nuevamente.', 'error');
+            } finally {
+                // Restaurar botón
+                const saveButton = document.querySelector('.btn-primary');
+                saveButton.innerHTML = originalText;
+                saveButton.disabled = false;
+            }
+        }
+        
+        // Función para limpiar el formulario
+        function clearForm(force = false) {
+            if (force || confirm('¿Está seguro de que desea limpiar todo el formulario? Se perderán todos los datos ingresados.')) {
+                document.getElementById('fullName').value = '';
+                document.getElementById('idType').value = '';
+                document.getElementById('idNumber').value = '';
+                document.getElementById('address').value = '';
+                document.getElementById('city').value = '';
+                document.getElementById('department').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('mobile').value = '';
+                document.getElementById('legalNature').value = '';
+                documentosSubidos = {};
+                cargarDocumentos();
+                tipoPersona = "juridica";
+                document.getElementById('juridicaCard').classList.add('selected');
+                document.getElementById('naturalCard').classList.remove('selected');
+                
+                if (!force) {
+                    showNotification('Formulario limpiado exitosamente', 'success');
+                }
+            }
+        }
+        
+        // Función para abrir pestañas
+        function openTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.textContent === 'Dashboard' && tabName === 'dashboard') tab.classList.add('active');
+                else if (tab.textContent === 'Solicitudes' && tabName === 'solicitudes') tab.classList.add('active');
+                else if (tab.textContent === 'Reportes' && tabName === 'reportes') tab.classList.add('active');
+                else if (tab.textContent === 'Enlaces' && tabName === 'invitaciones') tab.classList.add('active');
+            });
+        }
+        
+        // Cargar solicitudes en el panel de administración
+        function loadSubmissions() {
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            const tableBody = document.getElementById('submissionsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (submissions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay solicitudes registradas</td></tr>';
+                return;
+            }
+            
+            submissions.forEach((sub, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatDate(sub.timestamp)}</td>
+                    <td>${sub.fullName}</td>
+                    <td>${sub.idType}: ${sub.idNumber}</td>
+                    <td>${sub.legalNature === 'juridica' ? 'Jurídica' : 'Natural'}</td>
+                    <td>${Object.keys(sub.documents).length}</td>
+                    <td><span class="document-status ${sub.status === 'Completa' ? 'status-complete' : 'status-pending'}">${sub.status}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewSubmission(${index})">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteSubmission(${index})">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+            
+            updateDashboardStats();
+        }
+        
+        // Función para formatear fecha
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+        
+        // Función para formatear tamaño de archivos
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+        
+        // Función para actualizar estadísticas
+        function updateDashboardStats() {
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            document.getElementById('totalRequests').textContent = submissions.length;
+            document.getElementById('completeRequests').textContent = submissions.filter(s => s.status === 'Completa').length;
+            document.getElementById('pendingRequests').textContent = submissions.filter(s => s.status !== 'Completa').length;
+            document.getElementById('naturalRequests').textContent = submissions.filter(s => s.legalNature === 'natural').length;
+            
+            const recentBody = document.getElementById('recentSubmissions');
+            recentBody.innerHTML = '';
+            const recentSubmissions = submissions.slice(-5).reverse();
+            recentSubmissions.forEach(sub => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatDate(sub.timestamp)}</td>
+                    <td>${sub.fullName}</td>
+                    <td>${sub.idType}: ${sub.idNumber}</td>
+                    <td>${sub.legalNature === 'juridica' ? 'Jurídica' : 'Natural'}</td>
+                    <td>${Object.keys(sub.documents).length}</td>
+                    <td><span class="document-status ${sub.status === 'Completa' ? 'status-complete' : 'status-pending'}">${sub.status}</span></td>
+                `;
+                recentBody.appendChild(tr);
+            });
+        }
+        
+        // Función para ver detalles de solicitud
+        async function viewSubmission(index) {
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            const submission = submissions[index];
+            let content = `
+                <h3 style="color: #1a2a6c; margin-bottom: 25px; border-bottom: 2px solid #eaeaea; padding-bottom: 15px; text-transform: uppercase;">
+                    Detalles de la Solicitud
+                </h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <p>${submission.fullName}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Identificación:</label>
+                        <p>${submission.idType}: ${submission.idNumber}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo:</label>
+                        <p>${submission.legalNature === 'juridica' ? 'Persona Jurídica' : 'Persona Natural'}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de solicitud:</label>
+                        <p>${formatDate(submission.timestamp)}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Dirección:</label>
+                        <p>${submission.address}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Ciudad:</label>
+                        <p>${submission.city}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Departamento:</label>
+                        <p>${submission.department}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Teléfono:</label>
+                        <p>${submission.phone}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <p>${submission.email}</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Celular:</label>
+                        <p>${submission.mobile}</p>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Estado:</label>
+                        <p><span class="document-status ${submission.status === 'Completa' ? 'status-complete' : 'status-pending'}">${submission.status}</span></p>
+                    </div>
+                </div>
+                <h4 style="margin-top: 25px; color: #1a2a6c; border-bottom: 1px solid #eaeaea; padding-bottom: 15px; text-transform: uppercase;">
+                    Documentos Adjuntos
+                </h4>
+                <ul style="margin-left: 25px; margin-bottom: 25px;">
+            `;
+            
+            // Recuperar documentos de IndexedDB
+            for (const [docName, docInfo] of Object.entries(submission.documents)) {
+                try {
+                    let downloadContent = '';
+                    
+                    if (docInfo.id) {
+                        const fileData = await getFileFromDB(docInfo.id);
+                        if (fileData && fileData.content) {
+                            downloadContent = fileData.content;
+                        }
+                    }
+                    
+                    content += `<li>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div>
+                                <strong>${docName}:</strong> ${docInfo.name} (${formatBytes(docInfo.size)})
+                            </div>
+                            <a href="${downloadContent}" download="${docInfo.name}" class="download-btn">
+                                <i class="fas fa-download"></i> Descargar
+                            </a>
+                        </div>
+                    </li>`;
+                } catch (error) {
+                    console.error('Error al recuperar archivo:', error);
+                    content += `<li>${docName}: ${docInfo.name} <span class="status-pending-badge">Error al cargar</span></li>`;
+                }
+            }
+            
+            content += `</ul>`;
+            
+            // Botón para descargar todos los documentos
+            content += `
+                <div class="download-all-btn">
+                    <button class="btn btn-success" onclick="downloadAllDocuments(${index})">
+                        <i class="fas fa-download"></i> Descargar Todos los Documentos (ZIP)
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('detailsModal').style.display = 'flex';
+        }
+        
+        // Función para cerrar modal
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+        
+        // Función para eliminar solicitud
+        function deleteSubmission(index) {
+            if (confirm('¿Está seguro de eliminar esta solicitud?')) {
+                const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+                submissions.splice(index, 1);
+                localStorage.setItem('submissions', JSON.stringify(submissions));
+                loadSubmissions();
+                updateDashboardStats();
+                showNotification('Solicitud eliminada', 'success');
+            }
+        }
+        
+        // Función para buscar solicitudes
+        function searchSubmissions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            const tableBody = document.getElementById('submissionsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (submissions.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No hay solicitudes registradas</td></tr>';
+                return;
+            }
+            
+            const filtered = submissions.filter(sub => 
+                sub.fullName.toLowerCase().includes(searchTerm) || 
+                sub.idNumber.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filtered.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No se encontraron resultados</td></tr>';
+                return;
+            }
+            
+            filtered.forEach((sub, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatDate(sub.timestamp)}</td>
+                    <td>${sub.fullName}</td>
+                    <td>${sub.idType}: ${sub.idNumber}</td>
+                    <td>${sub.legalNature === 'juridica' ? 'Jurídica' : 'Natural'}</td>
+                    <td>${Object.keys(sub.documents).length}</td>
+                    <td><span class="document-status ${sub.status === 'Completa' ? 'status-complete' : 'status-pending'}">${sub.status}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="viewSubmission(${submissions.indexOf(sub)})">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteSubmission(${submissions.indexOf(sub)})">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+        
+        // Función para generar reportes
+        function generateReport() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reportType = document.getElementById('reportType').value;
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            let filtered = [...submissions];
+            
+            if (startDate && endDate) {
+                filtered = filtered.filter(sub => {
+                    const subDate = new Date(sub.timestamp).toISOString().split('T')[0];
+                    return subDate >= startDate && subDate <= endDate;
+                });
+            }
+            
+            if (reportType === 'complete') filtered = filtered.filter(sub => sub.status === 'Completa');
+            else if (reportType === 'incomplete') filtered = filtered.filter(sub => sub.status !== 'Completa');
+            else if (reportType === 'natural') filtered = filtered.filter(sub => sub.legalNature === 'natural');
+            else if (reportType === 'juridica') filtered = filtered.filter(sub => sub.legalNature === 'juridica');
+            
+            const resultsContainer = document.getElementById('reportResults');
+            resultsContainer.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = '<p style="text-align: center; padding: 25px; font-weight: 500;">No se encontraron resultados para los criterios seleccionados</p>';
+                return;
+            }
+            
+            let content = `
+                <h4 style="color: #1a2a6c; margin-bottom: 18px; text-transform: uppercase;">Resultados del Reporte: ${filtered.length} solicitudes encontradas</h4>
+                <div style="overflow-x: auto;">
+                    <table class="submissions-table" style="font-size: 0.95rem;">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Identificación</th>
+                                <th>Tipo</th>
+                                <th>Documentos</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            filtered.forEach(sub => {
+                content += `
+                    <tr>
+                        <td>${formatDate(sub.timestamp)}</td>
+                        <td>${sub.fullName}</td>
+                        <td>${sub.idType}: ${sub.idNumber}</td>
+                        <td>${sub.legalNature === 'juridica' ? 'Jurídica' : 'Natural'}</td>
+                        <td>${Object.keys(sub.documents).length}</td>
+                        <td><span class="document-status ${sub.status === 'Completa' ? 'status-complete' : 'status-pending'}">${sub.status}</span></td>
+                    </tr>
+                `;
+            });
+            
+            content += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            resultsContainer.innerHTML = content;
+        }
+        
+        // Función para descargar todos los documentos de una solicitud
+        async function downloadAllDocuments(index) {
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            const submission = submissions[index];
+            const docs = submission.documents;
+            
+            if (!docs || Object.keys(docs).length === 0) {
+                showNotification('No hay documentos para descargar', 'error');
+                return;
+            }
+            
+            // Mostrar indicador de progreso
+            const downloadButton = document.querySelector('.download-all-btn button');
+            const originalText = downloadButton.innerHTML;
+            downloadButton.innerHTML = '<div class="uploading-indicator"></div> Preparando descarga...';
+            downloadButton.disabled = true;
+            
+            try {
+                // Crear un archivo ZIP con todos los documentos
+                const zip = new JSZip();
+                const folder = zip.folder(`documentos_${submission.fullName.replace(/[^a-z0-9]/gi, '_')}`);
+                
+                // Crear un array de promesas para recuperar todos los archivos
+                const filePromises = Object.entries(docs).map(async ([docName, docInfo]) => {
+                    if (docInfo.id) {
+                        const fileData = await getFileFromDB(docInfo.id);
+                        if (fileData && fileData.content) {
+                            // Extraer datos binarios desde la URL base64
+                            const base64Data = fileData.content.split(',')[1];
+                            folder.file(docInfo.name, base64Data, {base64: true});
+                        }
+                    }
+                });
+                
+                // Esperar a que todos los archivos se recuperen
+                await Promise.all(filePromises);
+                
+                // Generar el archivo ZIP
+                const content = await zip.generateAsync({type:"blob"});
+                saveAs(content, `documentos_${submission.fullName.replace(/[^a-z0-9]/gi, '_')}.zip`);
+                showNotification('Descarga iniciada', 'success');
+            } catch (error) {
+                console.error('Error al generar ZIP:', error);
+                showNotification('Error al preparar la descarga', 'error');
+            } finally {
+                // Restaurar botón
+                downloadButton.innerHTML = originalText;
+                downloadButton.disabled = false;
+            }
+        }
+        
+        // Función para exportar todas las solicitudes a Excel
+        function exportToExcel() {
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            if (submissions.length === 0) {
+                showNotification('No hay datos para exportar', 'error');
+                return;
+            }
+            
+            // Preparar datos para la hoja de cálculo
+            const data = submissions.map(sub => ({
+                'Fecha': formatDate(sub.timestamp),
+                'Nombre': sub.fullName,
+                'Identificación': `${sub.idType}: ${sub.idNumber}`,
+                'Tipo': sub.legalNature === 'juridica' ? 'Jurídica' : 'Natural',
+                'Documentos': Object.keys(sub.documents).length,
+                'Estado': sub.status,
+                'Dirección': sub.address,
+                'Ciudad': sub.city,
+                'Departamento': sub.department,
+                'Teléfono': sub.phone,
+                'Email': sub.email,
+                'Celular': sub.mobile
+            }));
+            
+            // Crear libro de Excel
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Solicitudes");
+            
+            // Generar archivo y descargar
+            XLSX.writeFile(workbook, 'solicitudes_creditos.xlsx');
+            showNotification('Exportación a Excel completada', 'success');
+        }
+        
+        // Función para exportar el reporte actual a Excel
+        function exportReport() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reportType = document.getElementById('reportType').value;
+            const submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+            let filtered = [...submissions];
+            
+            if (startDate && endDate) {
+                filtered = filtered.filter(sub => {
+                    const subDate = new Date(sub.timestamp).toISOString().split('T')[0];
+                    return subDate >= startDate && subDate <= endDate;
+                });
+            }
+            
+            if (reportType === 'complete') filtered = filtered.filter(sub => sub.status === 'Completa');
+            else if (reportType === 'incomplete') filtered = filtered.filter(sub => sub.status !== 'Completa');
+            else if (reportType === 'natural') filtered = filtered.filter(sub => sub.legalNature === 'natural');
+            else if (reportType === 'juridica') filtered = filtered.filter(sub => sub.legalNature === 'juridica');
+            
+            if (filtered.length === 0) {
+                showNotification('No hay datos para exportar', 'error');
+                return;
+            }
+            
+            // Preparar datos para la hoja de cálculo
+            const data = filtered.map(sub => ({
+                'Fecha': formatDate(sub.timestamp),
+                'Nombre': sub.fullName,
+                'Identificación': `${sub.idType}: ${sub.idNumber}`,
+                'Tipo': sub.legalNature === 'juridica' ? 'Jurídica' : 'Natural',
+                'Documentos': Object.keys(sub.documents).length,
+                'Estado': sub.status,
+                'Dirección': sub.address,
+                'Ciudad': sub.city,
+                'Departamento': sub.department,
+                'Teléfono': sub.phone,
+                'Email': sub.email,
+                'Celular': sub.mobile
+            }));
+            
+            // Crear libro de Excel
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
+            
+            // Generar archivo y descargar
+            XLSX.writeFile(workbook, `reporte_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showNotification('Reporte exportado a Excel', 'success');
+        }
+        
+        // Función para mostrar notificaciones
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        /* Funcionalidad para generar enlaces de cliente */
+        
+        // Generar enlace personalizado para cliente
+        function generateClientLink() {
+            const clientName = document.getElementById('clientName').value;
+            const clientId = document.getElementById('clientId').value;
+            const clientEmail = document.getElementById('clientEmail').value;
+            const clientType = document.getElementById('clientType').value;
+            
+            if (!clientName || !clientId) {
+                showNotification('Por favor complete el nombre y la identificación del cliente', 'error');
+                return;
+            }
+            
+            // Generar un ID único para este cliente
+            const currentUrl = window.location.href.split('?')[0];
+            const clientLink = `${currentUrl}?name=${encodeURIComponent(clientName)}&id=${encodeURIComponent(clientId)}&type=${clientType}&email=${encodeURIComponent(clientEmail || '')}`;
+            
+            // Mostrar el enlace generado
+            document.getElementById('clientSpecificLink').textContent = clientLink;
+            document.getElementById('clientSpecificLink').href = clientLink;
+            document.getElementById('generatedLink').style.display = 'block';
+            
+            // Generar código QR
+            const qrContainer = document.getElementById('qrCodeContainer');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: clientLink,
+                width: 160,
+                height: 160
+            });
+            
+            // Guardar enlace en localStorage
+            saveClientLink(clientName, clientId, clientEmail, clientType, clientLink);
+            
+            showNotification(`Enlace generado para ${clientName}`, 'success');
+        }
+        
+        // Guardar enlace generado en localStorage
+        function saveClientLink(name, id, email, type, link) {
+            const clientLinks = JSON.parse(localStorage.getItem('clientLinks')) || [];
+            
+            // Verificar si ya existe
+            const existingIndex = clientLinks.findIndex(client => client.id === id);
+            
+            if (existingIndex !== -1) {
+                // Actualizar existente
+                clientLinks[existingIndex] = { name, id, email, type, link, date: new Date().toISOString() };
+            } else {
+                // Agregar nuevo
+                clientLinks.push({
+                    name,
+                    id,
+                    email,
+                    type,
+                    link,
+                    date: new Date().toISOString()
+                });
+            }
+            
+            localStorage.setItem('clientLinks', JSON.stringify(clientLinks));
+            
+            // Actualizar lista de clientes
+            updateClientLinksList();
+        }
+        
+        // Actualizar lista de clientes con enlaces generados
+        function updateClientLinksList() {
+            const clientLinks = JSON.parse(localStorage.getItem('clientLinks')) || [];
+            const clientList = document.getElementById('clientLinksList');
+            
+            if (clientLinks.length === 0) {
+                clientList.innerHTML = '<div class="client-item"><p>No hay clientes registrados</p></div>';
+                return;
+            }
+            
+            clientList.innerHTML = '';
+            
+            clientLinks.forEach(client => {
+                const clientItem = document.createElement('div');
+                clientItem.className = 'client-item';
+                clientItem.innerHTML = `
+                    <div class="client-info">
+                        <h4>${client.name}</h4>
+                        <p><i class="fas fa-id-card"></i> ${client.id}</p>
+                        ${client.email ? `<p><i class="fas fa-envelope"></i> ${client.email}</p>` : ''}
+                        <p><i class="fas fa-users"></i> ${client.type === 'juridica' ? 'Persona Jurídica' : 'Persona Natural'}</p>
+                    </div>
+                    <div class="client-actions">
+                        <button class="btn btn-primary" onclick="copyClientLink('${client.link}')">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="btn btn-info" onclick="openClientLink('${client.link}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                `;
+                clientList.appendChild(clientItem);
+            });
+        }
+        
+        // Copiar enlace específico
+        function copySpecificLink() {
+            const link = document.getElementById('clientSpecificLink').href;
+            copyToClipboard(link);
+            showNotification('Enlace copiado al portapapeles', 'success');
+        }
+        
+        // Copiar cualquier enlace
+        function copyClientLink(link) {
+            copyToClipboard(link);
+            showNotification('Enlace copiado al portapapeles', 'success');
+        }
+        
+        // Función para copiar al portapapeles
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+        
+        // Abrir enlace del cliente
+        function openClientLink(link) {
+            window.open(link, '_blank');
+        }
+        
+        // Enviar enlace por email (simulado)
+        function emailClientLink() {
+            const clientName = document.getElementById('clientName').value;
+            const clientEmail = document.getElementById('clientEmail').value;
+            const link = document.getElementById('clientSpecificLink').href;
+            
+            if (!clientEmail) {
+                showNotification('Por favor ingrese un email para enviar el enlace', 'error');
+                return;
+            }
+            
+            // Simulación de envío de email
+            const emailBody = `Hola ${clientName},\n\nPuedes completar tu solicitud de crédito en el siguiente enlace:\n\n${link}\n\nSaludos,\nGlobal Pacific SAS`;
+            
+            // En un sistema real, aquí se enviaría el email
+            // Simulamos la acción con una notificación
+            showNotification(`Enlace enviado por email a ${clientEmail}`, 'success');
+        }
+        
+        // Cambiar credenciales de administrador
+        function changeCredentials() {
+            const currentUsername = document.getElementById('currentUsername').value;
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validar credenciales actuales
+            if (currentUsername !== adminCredentials.username || currentPassword !== adminCredentials.password) {
+                showNotification('Credenciales actuales incorrectas', 'error');
+                return;
+            }
+            
+            // Validar nueva contraseña
+            if (newPassword !== confirmPassword) {
+                showNotification('Las nuevas contraseñas no coinciden', 'error');
+                return;
+            }
+            
+            // Actualizar credenciales
+            adminCredentials.username = newUsername;
+            adminCredentials.password = newPassword;
+            
+            // Guardar en localStorage
+            localStorage.setItem('adminCredentials', JSON.stringify(adminCredentials));
+            
+            // Actualizar UI
+            document.getElementById('currentUser').textContent = newUsername;
+            
+            showNotification('Credenciales actualizadas correctamente', 'success');
+            closeCredentialsModal();
+        }
+    </script>
+</body>
+</html>
